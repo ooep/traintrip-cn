@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>车辆基地｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 车辆基地 <span class="en">TRAINDEPOT</span></div>
+
+  <section class="section">
+    <p class="notice info">铁道之颜印章需要组合多个车站的版本才能完成。本地版可直接在下方模拟盖章收集。</p>
+    <div id="groups"></div>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="traindepot.html" class="active"><img src="assets/img/common/icon-blank.svg" alt="">车辆基地</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+window.TT.loadJSON("data/traindepot_cn.json").then(function (groups) {
+  var box = document.getElementById("groups");
+  box.innerHTML = groups.map(function (g) {
+    var chips = g.stations.map(function (s) {
+      var id = "face_" + s;
+      var got = window.TT.hasStamp(id);
+      return '<span class="station-chip' + (got ? " got" : "") + '" data-id="' + id + '" data-name="' + s + '">' +
+        window.TT.stationLabel(s) + (got ? " ✓" : "") + '</span>';
+    }).join("");
+    return '<div class="station-group"><h4>' + g.group + '<span class="n">' + g.stations.length + ' 站</span></h4><div class="station-chips">' + chips + '</div></div>';
+  }).join("");
+  box.querySelectorAll(".station-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var id = chip.getAttribute("data-id");
+      var got = window.TT.hasStamp(id);
+      if (got) { window.TT.removeStamp(id); chip.classList.remove("got"); chip.textContent = chip.textContent.replace(" ✓", ""); }
+      else { window.TT.addStamp(id); chip.classList.add("got"); chip.textContent = chip.textContent + " ✓"; }
+    });
+  });
+});
+</script>
+</body>
+</html>

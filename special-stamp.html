@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>特殊印章｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 特殊印章 <span class="en">SPECIAL STAMP</span></div>
+
+  <section class="section">
+    <p class="notice info">按指定条件收集多个车站印章即可完成的特殊印章，共 45 枚。</p>
+    <div class="card-list" id="list"></div>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="special-stamp.html" class="active"><img src="assets/img/common/icon-star.svg" alt="">特殊印章</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+window.TT.loadJSON("data/special_cn.json").then(function (list) {
+  document.getElementById("list").innerHTML = list.map(function (e) {
+    return '<div class="card"><div class="tag red">SPECIAL</div>' +
+      '<h3>' + e.title_cn + '</h3>' +
+      '<div class="meta"><b>获得条件：</b>' + e.cond_cn + '</div></div>';
+  }).join("");
+});
+</script>
+</body>
+</html>

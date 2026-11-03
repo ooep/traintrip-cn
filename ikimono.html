@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>生物图鉴｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 生物图鉴 <span class="en">IKIMONO</span></div>
+
+  <section class="section">
+    <div class="stats-bar">
+      <div class="stat"><div class="num" id="gotNum">0</div><div class="label">已收集</div></div>
+      <div class="stat"><div class="num">120</div><div class="label">共 120 种</div></div>
+    </div>
+    <p class="notice info">在日本各地车站获取的动物・生物主题印章图鉴。点击卡片可查看详情并模拟盖章。</p>
+  </section>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-f="all">全部</button>
+    <button class="filter-tab" data-f="JR北海道">JR北海道</button>
+    <button class="filter-tab" data-f="JR東日本">JR东日本</button>
+    <button class="filter-tab" data-f="JR東海">JR东海</button>
+    <button class="filter-tab" data-f="JR西日本">JR西日本</button>
+    <button class="filter-tab" data-f="JR四国">JR四国</button>
+    <button class="filter-tab" data-f="JR九州">JR九州</button>
+  </div>
+
+  <section class="section">
+    <div class="ikimono-grid" id="grid"></div>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="ikimono.html" class="active"><img src="assets/img/common/icon-annotation.png" alt="">生物图鉴</a>
+  </nav>
+</div>
+
+<div class="modal-mask hidden" id="modal">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">✕ 关闭</button>
+    <h3 id="mTitle"></h3>
+    <p class="card tag green" id="mCat"></p>
+    <p class="meta" id="mText"></p>
+    <p class="meta mt8"><b>获取车站：</b><span id="mStation"></span></p>
+    <button class="btn mt16" id="mBtn" onclick="toggleModalStamp()">盖章</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+var ITEMS = [];
+var currentFilter = "all";
+var currentItem = null;
+
+function render() {
+  var grid = document.getElementById("grid");
+  var list = currentFilter === "all" ? ITEMS : ITEMS.filter(function (d) { return d.group === currentFilter; });
+  grid.innerHTML = "";
+  list.forEach(function (d) {
+    var got = window.TT.hasStamp("ikimono_" + d.no);
+    var el = document.createElement("div");
+    el.className = "ikimono-card" + (got ? " got" : "");
+    el.innerHTML =
+      '<div class="no">No.' + String(d.no).padStart(3, "0") + '</div>' +
+      '<div class="stamp">' + (got ? '<img src="assets/img/stamp/1000--01.png" alt="">' : "") + '</div>' +
+      '<div class="name">' + d.title_cn + '</div>' +
+      '<div class="station">' + window.TT.stationLabel(d.station_name) + '</div>';
+    el.addEventListener("click", function () { openModal(d); });
+    grid.appendChild(el);
+  });
+  updateCount();
+}
+function updateCount() {
+  var n = ITEMS.filter(function (d) { return window.TT.hasStamp("ikimono_" + d.no); }).length;
+  document.getElementById("gotNum").textContent = n;
+}
+function openModal(d) {
+  currentItem = d;
+  document.getElementById("mTitle").textContent = d.title_cn;
+  document.getElementById("mCat").textContent = d.category_cn;
+  document.getElementById("mText").textContent = d.text_cn;
+  document.getElementById("mStation").textContent = window.TT.stationLabel(d.station_name) + "（" + window.TT.GROUP_CN[d.group] + "）";
+  var got = window.TT.hasStamp("ikimono_" + d.no);
+  document.getElementById("mBtn").textContent = got ? "取消盖章" : "盖章";
+  document.getElementById("mBtn").className = "btn mt16" + (got ? " outline" : "");
+  document.getElementById("modal").classList.remove("hidden");
+}
+function closeModal() { document.getElementById("modal").classList.add("hidden"); }
+function toggleModalStamp() {
+  if (!currentItem) return;
+  var id = "ikimono_" + currentItem.no;
+  if (window.TT.hasStamp(id)) window.TT.removeStamp(id); else window.TT.addStamp(id);
+  render();
+  closeModal();
+}
+document.querySelectorAll(".filter-tab").forEach(function (t) {
+  t.addEventListener("click", function () {
+    document.querySelectorAll(".filter-tab").forEach(function (x) { x.classList.remove("active"); });
+    t.classList.add("active");
+    currentFilter = t.getAttribute("data-f");
+    render();
+  });
+});
+window.TT.loadJSON("data/ikimono_cn.json").then(function (d) { ITEMS = d; render(); });
+</script>
+</body>
+</html>

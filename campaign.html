@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>应募活动｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 应募活动 <span class="en">PRESENT CAMPAIGN</span></div>
+
+  <section class="section">
+    <div class="card">
+      <div class="tag red">集满 50 个印章</div>
+      <h3>印章手册</h3>
+      <div class="meta">抽选 <b>150 名</b><br>可用于应募的印章：<b id="c1">0</b> 个</div>
+      <p class="notice info mt8">集满 50 个车站印章即可参与应募（活动需在原站参与，本地版仅供了解规则）。</p>
+    </div>
+    <div class="card mt16">
+      <div class="tag blue">集满 5 个印章</div>
+      <h3>印章地图壁纸（下载）</h3>
+      <div class="meta">全员可获<br>可用于应募的印章：<b id="c2">0</b> 个</div>
+      <p class="notice info mt8">※壁纸可在活动结束后的 2027 年 1 月 28 日起下载。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="notice caution">
+      <span class="n-title">注意</span><br>
+      本页面为中文本地化演示版。原站的应募活动需要通过 LINE / X 账号登录后参与；本地版不包含登录、注册与账号功能，请前往原站参与正式活动。
+    </div>
+  </section>
+
+  <footer class="footer">
+    <a href="assets/present_campaign.pdf">活动应募规约（PDF）</a><br>
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="campaign.html" class="active"><img src="assets/img/common/icon-star.svg" alt="">应募活动</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+document.addEventListener("stampchange", update);
+function update() {
+  var n = window.TT.countStamps();
+  document.getElementById("c1").textContent = n;
+  document.getElementById("c2").textContent = n;
+}
+window.addEventListener("DOMContentLoaded", update);
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>我的日本铁路｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 我的日本铁路 <span class="en">MY JAPAN RAILWAY</span></div>
+
+  <section class="section">
+    <div class="stats-bar">
+      <div class="stat"><div class="num" id="nStation">0</div><div class="label">车站印章</div></div>
+      <div class="stat"><div class="num" id="nIkimono">0</div><div class="label">生物印章</div></div>
+      <div class="stat"><div class="num" id="nFace">0</div><div class="label">铁道之颜</div></div>
+      <div class="stat"><div class="num" id="nTotal">0</div><div class="label">合计</div></div>
+    </div>
+    <p class="notice info" id="emptyTip">还没有收集任何印章，去印章地图逛逛吧。</p>
+  </section>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-f="all">全部</button>
+    <button class="filter-tab" data-f="station">车站</button>
+    <button class="filter-tab" data-f="ikimono">生物</button>
+    <button class="filter-tab" data-f="face">车辆基地</button>
+  </div>
+
+  <section class="section">
+    <div class="card-list" id="list"></div>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html" class="active"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="ikimono.html"><img src="assets/img/common/icon-annotation.png" alt="">生物图鉴</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+var STATIONS = [], IKIMONO = [];
+var mode = "all";
+
+function render() {
+  var stamps = window.TT.loadStamps();
+  var listEl = document.getElementById("list");
+  var items = [];
+  Object.keys(stamps).forEach(function (k) {
+    if (k.indexOf("st_") === 0) {
+      var id = k.slice(3);
+      var st = STATIONS.filter(function (s) { return String(s.id) === id; })[0];
+      if (st) items.push({ type: "station", name: window.TT.stationLabel(st.name), group: st.group, time: stamps[k].t });
+    } else if (k.indexOf("ikimono_") === 0) {
+      var no = k.slice(8);
+      var ik = IKIMONO.filter(function (s) { return String(s.no) === no; })[0];
+      if (ik) items.push({ type: "ikimono", name: ik.title_cn, group: ik.group, time: stamps[k].t });
+    } else if (k.indexOf("face_") === 0) {
+      items.push({ type: "face", name: window.TT.stationLabel(k.slice(5)), group: "铁道之颜", time: stamps[k].t });
+    }
+  });
+  if (mode === "station") items = items.filter(function (i) { return i.type === "station"; });
+  if (mode === "ikimono") items = items.filter(function (i) { return i.type === "ikimono"; });
+  if (mode === "face") items = items.filter(function (i) { return i.type === "face"; });
+  items.sort(function (a, b) { return b.time - a.time; });
+
+  document.getElementById("emptyTip").classList.toggle("hidden", items.length > 0);
+  listEl.innerHTML = items.map(function (i) {
+    var tag = i.type === "station" ? '<span class="tag green">车站</span>' :
+      i.type === "ikimono" ? '<span class="tag blue">生物</span>' : '<span class="tag red">车辆基地</span>';
+    var d = new Date(i.time);
+    var ds = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    return '<div class="card">' + tag + '<span class="tag">' + (window.TT.GROUP_CN[i.group] || i.group || "") + '</span>' +
+      '<h3>' + i.name + '</h3><div class="meta">获得日期：' + ds + '</div></div>';
+  }).join("");
+}
+function updateCounts() {
+  var stamps = window.TT.loadStamps();
+  var ns = 0, ni = 0, nf = 0;
+  Object.keys(stamps).forEach(function (k) {
+    if (k.indexOf("st_") === 0) ns++;
+    else if (k.indexOf("ikimono_") === 0) ni++;
+    else if (k.indexOf("face_") === 0) nf++;
+  });
+  document.getElementById("nStation").textContent = ns;
+  document.getElementById("nIkimono").textContent = ni;
+  document.getElementById("nFace").textContent = nf;
+  document.getElementById("nTotal").textContent = ns + ni + nf;
+}
+document.querySelectorAll(".filter-tab").forEach(function (t) {
+  t.addEventListener("click", function () {
+    document.querySelectorAll(".filter-tab").forEach(function (x) { x.classList.remove("active"); });
+    t.classList.add("active");
+    mode = t.getAttribute("data-f");
+    render();
+  });
+});
+document.addEventListener("stampchange", function () { updateCounts(); render(); });
+window.TT.loadJSON("data/stations_cn.json").then(function (d) { STATIONS = d; render(); });
+window.TT.loadJSON("data/ikimono_cn.json").then(function (d) { IKIMONO = d; render(); });
+updateCounts();
+</script>
+</body>
+</html>

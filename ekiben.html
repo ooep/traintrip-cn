@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>车站便当・车站荞麦｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 车站便当・车站荞麦 <span class="en">EKIBEN / EKISOBA</span></div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-f="ekiben">车站便当（15）</button>
+    <button class="filter-tab" data-f="ekisoba">车站荞麦（24）</button>
+  </div>
+
+  <section class="section">
+    <div class="card-list" id="list"></div>
+    <p class="notice info mt16">在指定车站获取便当・荞麦印章后即可解锁图鉴。</p>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="ekiben.html" class="active"><img src="assets/img/common/icon-all.svg" alt="">便当荞麦</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+var EKIBEN = [], EKISOBA = [];
+var mode = "ekiben";
+var GRP = {
+  "JR北海道":"JR北海道","JR東日本":"JR东日本","JR東海":"JR东海","JR西日本":"JR西日本","JR四国":"JR四国","JR九州":"JR九州"
+};
+
+function render() {
+  var listEl = document.getElementById("list");
+  if (mode === "ekiben") {
+    listEl.innerHTML = EKIBEN.map(function (e) {
+      return '<div class="card"><div class="tag green">车站便当</div><div class="tag">' + (e.company_cn || "") + '</div>' +
+        '<h3>' + e.name_cn + '</h3>' +
+        '<div class="meta"><b>获得条件：</b>' + e.cond_cn + '<br><b>主要售卖场所：</b>' + e.place_cn + '</div></div>';
+    }).join("");
+  } else {
+    listEl.innerHTML = EKISOBA.map(function (e) {
+      return '<div class="card"><div class="tag blue">车站荞麦</div>' +
+        '<h3>' + e.menu_cn + '</h3>' +
+        '<div class="meta"><b>店铺：</b>' + e.shop_cn + '<br><b>车站：</b>' + e.station_cn + '</div></div>';
+    }).join("");
+  }
+}
+document.querySelectorAll(".filter-tab").forEach(function (t) {
+  t.addEventListener("click", function () {
+    document.querySelectorAll(".filter-tab").forEach(function (x) { x.classList.remove("active"); });
+    t.classList.add("active");
+    mode = t.getAttribute("data-f");
+    render();
+  });
+});
+window.TT.loadJSON("data/ekiben_cn.json").then(function (d) { EKIBEN = d; render(); });
+window.TT.loadJSON("data/ekisoba_cn.json").then(function (d) { EKISOBA = d; });
+</script>
+</body>
+</html>

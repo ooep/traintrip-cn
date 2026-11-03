@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>保存印章｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 保存印章 <span class="en">SAVE</span></div>
+
+  <section class="section">
+    <div class="card">
+      <h3>印章的保存方法</h3>
+      <div class="meta">
+        <b>1. 选择要保存的印章</b><br>请选择布局、显示信息和要保存的印章。<br><br>
+        <b>2. 通过截图保存图片</b><br>使用手机系统截图功能保存。多页时可通过滑动切换。<br>※本画面可通过系统截图保存到相册。
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">选择保存布局<span class="en">LAYOUT</span></h2>
+    <div class="filter-tabs">
+      <button class="filter-tab" data-l="6">2×3 个</button>
+      <button class="filter-tab active" data-l="12">3×4 个 · 推荐</button>
+      <button class="filter-tab" data-l="20">4×5 个</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">选择显示的信息<span class="en">INFO</span></h2>
+    <div class="card">
+      <div class="save-option"><div><div class="label">站名</div><div class="hint">显示车站名称</div></div><div class="switch on" data-opt="station" onclick="toggleOpt(this)"></div></div>
+      <div class="save-option"><div><div class="label">获得日期</div><div class="hint">显示收集日期</div></div><div class="switch on" data-opt="date" onclick="toggleOpt(this)"></div></div>
+      <div class="save-option"><div><div class="label">印章发行编号</div><div class="hint">显示印章编号</div></div><div class="switch" data-opt="no" onclick="toggleOpt(this)"></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">选择要保存的印章<span class="en">SELECT</span></h2>
+    <p class="notice" id="selTip">（已获得印章 0 件）</p>
+    <div class="station-chips" id="stampSel"></div>
+    <div class="mt16" style="display:flex;gap:10px;">
+      <button class="btn outline" style="flex:1" onclick="selAll()">全选</button>
+      <button class="btn gray" style="flex:1" onclick="selNone()">取消全选</button>
+    </div>
+    <button class="btn red mt16" id="previewBtn" onclick="preview()">生成保存画面</button>
+  </section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="save.html" class="active"><img src="assets/img/common/icon-save.svg" alt="">保存印章</a>
+  </nav>
+</div>
+
+<div class="modal-mask hidden" id="previewModal">
+  <div class="modal-box">
+    <button class="close" onclick="closePreview()">✕ 关闭</button>
+    <h3>保存画面预览</h3>
+    <p class="notice info">本地版提供预览。正式生成图片需配合系统截图使用。</p>
+    <div id="previewArea" style="background:#f7f7f7;border-radius:10px;padding:14px;min-height:180px;"></div>
+    <button class="btn mt16" onclick="closePreview()">完成</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+var STATIONS = [], selected = {}, opts = { station: true, date: true, no: false };
+var layout = 12;
+
+function renderSel() {
+  var stamps = window.TT.loadStamps();
+  var list = [];
+  Object.keys(stamps).forEach(function (k) {
+    if (k.indexOf("st_") === 0) {
+      var id = k.slice(3);
+      var st = STATIONS.filter(function (s) { return String(s.id) === id; })[0];
+      if (st) list.push({ k: k, name: window.TT.stationLabel(st.name) });
+    } else if (k.indexOf("ikimono_") === 0) {
+      list.push({ k: k, name: "生物图鉴" });
+    } else if (k.indexOf("face_") === 0) {
+      list.push({ k: k, name: window.TT.stationLabel(k.slice(5)) });
+    }
+  });
+  document.getElementById("selTip").textContent = "（已获得印章 " + list.length + " 件）";
+  var box = document.getElementById("stampSel");
+  box.innerHTML = list.map(function (i) {
+    var on = !!selected[i.k];
+    return '<span class="station-chip' + (on ? " got" : "") + '" data-k="' + i.k + '">' + i.name + (on ? " ✓" : "") + '</span>';
+  }).join("");
+  box.querySelectorAll(".station-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var k = chip.getAttribute("data-k");
+      selected[k] = !selected[k];
+      renderSel();
+    });
+  });
+}
+function toggleOpt(el) { el.classList.toggle("on"); opts[el.getAttribute("data-opt")] = el.classList.contains("on"); }
+function selAll() { Object.keys(window.TT.loadStamps()).forEach(function (k) { selected[k] = true; }); renderSel(); }
+function selNone() { selected = {}; renderSel(); }
+function preview() {
+  var sel = Object.keys(selected).filter(function (k) { return selected[k]; });
+  var area = document.getElementById("previewArea");
+  if (!sel.length) { alert("请先选择要保存的印章"); return; }
+  var stamps = window.TT.loadStamps();
+  var html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
+  sel.slice(0, 12).forEach(function (k) {
+    var name = "印章";
+    if (k.indexOf("st_") === 0) { var st = STATIONS.filter(function (s) { return String(s.id) === k.slice(3); })[0]; if (st) name = window.TT.stationLabel(st.name); }
+    else if (k.indexOf("face_") === 0) name = window.TT.stationLabel(k.slice(5));
+    var d = new Date(stamps[k].t);
+    var ds = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    html += '<div style="background:#fff;border:1px solid #eee;border-radius:8px;padding:10px;text-align:center;">' +
+      '<div style="font-size:10px;color:#aaa;">' + (opts.no ? "No." + k : "印章") + '</div>' +
+      '<div style="font-size:13px;font-weight:700;margin:4px 0;">' + name + '</div>' +
+      (opts.date ? '<div style="font-size:10px;color:#999;">' + ds + '</div>' : "") +
+      '</div>';
+  });
+  html += '</div>';
+  area.innerHTML = html;
+  document.getElementById("previewModal").classList.remove("hidden");
+}
+function closePreview() { document.getElementById("previewModal").classList.add("hidden"); }
+document.querySelectorAll("[data-l]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    document.querySelectorAll("[data-l]").forEach(function (x) { x.classList.remove("active"); });
+    b.classList.add("active");
+    layout = parseInt(b.getAttribute("data-l"), 10);
+  });
+});
+window.TT.loadJSON("data/stations_cn.json").then(function (d) { STATIONS = d; renderSel(); });
+renderSel();
+</script>
+</body>
+</html>

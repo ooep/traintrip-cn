@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>印章地图｜TRAIN TRIP 中文本地版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="page-title"><a class="back" href="index.html">‹</a> 印章地图 <span class="en">STAMP MAP</span></div>
+
+  <section class="section">
+    <div class="stats-bar">
+      <div class="stat"><div class="num" id="gotNum">0</div><div class="label">已收集</div></div>
+      <div class="stat"><div class="num" id="totalNum">0</div><div class="label">车站印章总数</div></div>
+    </div>
+    <p class="notice info">本本地版将地图替换为车站列表，点击站点即可模拟盖章。共收录 JR 全线 1482 个车站，覆盖北海道、东北・关东、中部、近畿、中国・四国、九州六大地区。</p>
+  </section>
+
+  <div class="section">
+    <input type="search" id="search" placeholder="搜索车站名（如：东京、仙台、札幌）"
+      style="width:100%;padding:12px 14px;border:1px solid #e2e2e2;border-radius:10px;font-size:15px;font-family:inherit;">
+  </div>
+
+  <div class="filter-tabs" id="areaTabs">
+    <button class="filter-tab active" data-a="">全部地区</button>
+    <button class="filter-tab" data-a="北海道">北海道</button>
+    <button class="filter-tab" data-a="東北・関東">东北・关东</button>
+    <button class="filter-tab" data-a="中部">中部</button>
+    <button class="filter-tab" data-a="近畿">近畿</button>
+    <button class="filter-tab" data-a="中国・四国">中国・四国</button>
+    <button class="filter-tab" data-a="九州">九州</button>
+  </div>
+
+  <section class="section" id="list"></section>
+
+  <footer class="footer">
+    <a href="terms.html">网站使用规约</a>｜<a href="privacy.html">隐私政策</a>
+    <p class="copyright">© JR GROUP. All rights reserved. · 中文本地版</p>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><img src="assets/img/common/logo-traintrip.png" alt="">首页</a>
+    <a href="find.html" class="active"><img src="assets/img/find/pin_station_white.png" alt="">印章地图</a>
+    <a href="my.html"><img src="assets/img/common/icon-grid.svg" alt="">我的集章</a>
+    <a href="ikimono.html"><img src="assets/img/common/icon-annotation.png" alt="">生物图鉴</a>
+  </nav>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+var ALL = [];
+var area = "";
+var kw = "";
+
+function render() {
+  var listEl = document.getElementById("list");
+  var list = ALL;
+  if (area) list = list.filter(function (d) { return d.area === area; });
+  if (kw) list = list.filter(function (d) { return d.name.indexOf(kw) >= 0; });
+  if (!list.length) {
+    listEl.innerHTML = '<div class="notice">没有符合条件的车站。</div>';
+    return;
+  }
+  // 按公司分组展示
+  var groups = {};
+  list.forEach(function (d) {
+    var g = d.group || "其他";
+    (groups[g] = groups[g] || []).push(d);
+  });
+  var html = "";
+  Object.keys(groups).forEach(function (g) {
+    html += '<div class="station-group"><h4>' + (window.TT.GROUP_CN[g] || g) + '<span class="n">' + groups[g].length + ' 站</span></h4><div class="station-chips">';
+    groups[g].forEach(function (d) {
+      var got = window.TT.hasStamp("st_" + d.id);
+      html += '<span class="station-chip' + (got ? " got" : "") + '" data-id="' + d.id + '" data-name="' + d.name + '">' +
+        window.TT.stationLabel(d.name) + (got ? " ✓" : "") + '</span>';
+    });
+    html += '</div></div>';
+  });
+  listEl.innerHTML = html;
+  // 绑定点击盖章
+  listEl.querySelectorAll(".station-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var id = "st_" + chip.getAttribute("data-id");
+      var got = window.TT.hasStamp(id);
+      if (got) { window.TT.removeStamp(id); chip.classList.remove("got"); chip.textContent = chip.textContent.replace(" ✓", ""); }
+      else {
+        window.TT.addStamp(id);
+        chip.classList.add("got");
+        chip.textContent = chip.textContent + " ✓";
+      }
+      updateCount();
+    });
+  });
+}
+function updateCount() {
+  document.getElementById("gotNum").textContent = window.TT.countStamps();
+}
+document.getElementById("search").addEventListener("input", function (e) { kw = e.target.value.trim(); render(); });
+document.querySelectorAll("#areaTabs .filter-tab").forEach(function (t) {
+  t.addEventListener("click", function () {
+    document.querySelectorAll("#areaTabs .filter-tab").forEach(function (x) { x.classList.remove("active"); });
+    t.classList.add("active");
+    area = t.getAttribute("data-a");
+    render();
+  });
+});
+window.TT.loadJSON("data/stations_cn.json").then(function (d) {
+  ALL = d;
+  document.getElementById("totalNum").textContent = d.length;
+  render();
+});
+</script>
+</body>
+</html>

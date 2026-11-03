@@ -1,0 +1,245 @@
+/* ============================================================
+   TRAIN TRIP 中文本地版 样式
+   设计语言继承原站：JR绿 #02af00 / JR红 #e60012 / 黑 #000 / 白 #fff
+   ============================================================ */
+:root {
+  --jr-green: #02af00;
+  --jr-green-dark: #018a00;
+  --jr-red: #e60012;
+  --ink: #000;
+  --gray: #666;
+  --gray-light: #ededed;
+  --line: #e2e2e2;
+  --blue: #1a87fe;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  color: var(--ink);
+  background: #fff;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+.container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+.page { padding-bottom: 90px; min-height: 100vh; }
+
+/* ---------- 顶部 LOGO ---------- */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+.site-header .logo { height: 30px; }
+.site-header .logo img { height: 30px; width: auto; }
+.site-header .header-actions { display: flex; align-items: center; gap: 10px; }
+.badge-new {
+  display: inline-block; background: var(--jr-red); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px;
+  vertical-align: middle; margin-left: 4px; letter-spacing: .5px;
+}
+
+/* ---------- 首页主视觉 ---------- */
+.hero {
+  background: linear-gradient(160deg, #ffffff 0%, #f2f9f2 55%, #e4f3e4 100%);
+  padding: 40px 20px 36px;
+  text-align: center;
+}
+.hero .hero-logo { width: 210px; margin: 0 auto 18px; }
+.hero h1 {
+  font-size: 24px; font-weight: 800; letter-spacing: 2px;
+  line-height: 1.4; margin-bottom: 6px;
+}
+.hero h1 .sub { display: block; font-size: 13px; font-weight: 500; color: var(--jr-green); letter-spacing: 1px; margin-top: 6px; }
+.hero .desc { font-size: 14px; color: var(--gray); margin-top: 10px; }
+.hero .cta {
+  display: block; margin: 22px auto 0; width: fit-content;
+  background: var(--jr-green); color: #fff;
+  font-size: 16px; font-weight: 700; letter-spacing: 1px;
+  padding: 14px 48px; border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(2,175,0,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.hero .cta:active { transform: scale(.97); box-shadow: 0 2px 8px rgba(2,175,0,.3); }
+
+/* ---------- 菜单网格 ---------- */
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 18px 16px 4px; }
+.menu-item {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 108px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 10px; text-align: center;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.menu-item:active { transform: scale(.97); box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.menu-item .mi-icon { width: 42px; height: 42px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
+.menu-item .mi-icon img { max-width: 42px; max-height: 42px; }
+.menu-item .mi-title { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+.menu-item .mi-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.menu-item .mi-new {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--jr-red); color: #fff; font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: 3px; letter-spacing: .5px;
+}
+.menu-item.full { grid-column: 1 / -1; }
+.menu-item.hero-green { background: var(--jr-green); border-color: var(--jr-green); }
+.menu-item.hero-green .mi-title { color: #fff; }
+.menu-item.hero-green .mi-sub { color: rgba(255,255,255,.85); }
+
+/* ---------- 页头 ---------- */
+.page-title {
+  background: var(--jr-green); color: #fff;
+  padding: 14px 16px; font-size: 18px; font-weight: 800; letter-spacing: 1px;
+  display: flex; align-items: center; gap: 8px;
+}
+.page-title .back { font-size: 14px; opacity: .9; }
+.page-title .en { font-size: 10px; font-weight: 600; opacity: .75; letter-spacing: 2px; }
+
+/* ---------- 区块 ---------- */
+.section { padding: 20px 16px 4px; }
+.section-title {
+  font-size: 17px; font-weight: 800; letter-spacing: 1px;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.section-title::before { content: ""; width: 5px; height: 20px; background: var(--jr-green); border-radius: 2px; }
+.section-title .en { font-size: 10px; color: var(--gray); font-weight: 600; letter-spacing: 2px; }
+
+/* ---------- 提示框 ---------- */
+.notice {
+  background: #f7f7f7; border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; font-size: 13px; color: #444; margin: 12px 0; line-height: 1.8;
+}
+.notice.caution { background: #fff5f5; border-color: #ffd4d4; color: #a11; }
+.notice.caution .n-title { color: var(--jr-red); font-weight: 800; }
+.notice.info { background: #f2f8ff; border-color: #cfe5ff; color: #124b7a; }
+
+/* ---------- 卡片列表 ---------- */
+.card-list { display: flex; flex-direction: column; gap: 10px; }
+.card {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px;
+}
+.card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; line-height: 1.5; }
+.card .tag {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .5px;
+  background: #f0f0f0; color: #555; border-radius: 3px; padding: 1px 6px; margin: 2px 4px 2px 0;
+}
+.card .tag.green { background: #e6f6e6; color: var(--jr-green-dark); }
+.card .tag.red { background: #ffecee; color: var(--jr-red); }
+.card .tag.blue { background: #e8f3ff; color: #0a5cb8; }
+.card .meta { font-size: 12px; color: var(--gray); margin-top: 6px; line-height: 1.7; }
+.card .meta b { color: #333; font-weight: 600; }
+
+/* ---------- 生物图鉴 ---------- */
+.ikimono-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ikimono-card {
+  position: relative; background: #fff; border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 6px; text-align: center; overflow: hidden;
+}
+.ikimono-card .stamp {
+  width: 78px; height: 78px; margin: 4px auto 6px; border-radius: 8px;
+  background: #f7f7f7 url("../assets/img/common/icon-blank.svg") no-repeat center / 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ikimono-card .stamp img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+.ikimono-card .no { font-size: 9px; color: #aaa; letter-spacing: 1px; }
+.ikimono-card .name { font-size: 12px; font-weight: 700; line-height: 1.35; margin-top: 2px; }
+.ikimono-card .station { font-size: 10px; color: var(--gray); margin-top: 2px; }
+.ikimono-card.got { border-color: var(--jr-green); box-shadow: 0 0 0 1px var(--jr-green) inset; }
+.ikimono-card.got .stamp { background: #e6f6e6; }
+
+/* ---------- 筛选标签 ---------- */
+.filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px 2px; -webkit-overflow-scrolling: touch; }
+.filter-tab {
+  flex: none; font-size: 13px; font-weight: 600; color: #444;
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; background: #fff;
+}
+.filter-tab.active { background: var(--jr-green); border-color: var(--jr-green); color: #fff; }
+
+/* ---------- 保存页 ---------- */
+.save-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.save-option:last-child { border-bottom: none; }
+.save-option .label { font-size: 14px; font-weight: 600; }
+.save-option .hint { font-size: 11px; color: var(--gray); }
+.switch { width: 46px; height: 26px; border-radius: 13px; background: #d9d9d9; position: relative; transition: background .2s; }
+.switch.on { background: var(--jr-green); }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.switch.on::after { left: 23px; }
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: block; width: 100%; text-align: center;
+  background: var(--jr-green); color: #fff;
+  font-size: 16px; font-weight: 700; letter-spacing: 1px;
+  padding: 14px 20px; border-radius: 10px;
+}
+.btn:active { opacity: .9; }
+.btn.outline { background: #fff; color: var(--jr-green); border: 1.5px solid var(--jr-green); }
+.btn.red { background: var(--jr-red); }
+.btn.gray { background: #999; }
+
+/* ---------- 底部导航 ---------- */
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  background: #fff; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-around; padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+.bottom-nav a { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #777; padding: 2px 8px; }
+.bottom-nav a.active { color: var(--jr-green); font-weight: 700; }
+.bottom-nav a img { width: 24px; height: 24px; margin-bottom: 2px; }
+
+/* ---------- 站名列表 ---------- */
+.station-group { margin-bottom: 18px; }
+.station-group h4 {
+  font-size: 14px; font-weight: 800; color: #fff; background: #333;
+  border-radius: 6px; padding: 6px 12px; margin-bottom: 8px; letter-spacing: 1px;
+}
+.station-group h4 .n { font-size: 11px; opacity: .7; font-weight: 500; margin-left: 6px; }
+.station-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.station-chip {
+  font-size: 12px; border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 10px; background: #fff;
+}
+.station-chip.got { border-color: var(--jr-green); color: var(--jr-green-dark); background: #f0faf0; }
+.station-chip button { all: inherit; }
+
+/* ---------- 弹窗 ---------- */
+.modal-mask {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-box {
+  background: #fff; border-radius: 14px; width: 100%; max-width: 420px;
+  padding: 22px 20px; max-height: 78vh; overflow-y: auto;
+}
+.modal-box h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+.modal-box .close { float: right; font-size: 13px; color: var(--gray); }
+
+/* ---------- 数字/统计条 ---------- */
+.stats-bar {
+  display: flex; justify-content: space-around; background: #fff;
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 8px; margin: 14px 0;
+}
+.stats-bar .stat { text-align: center; }
+.stats-bar .num { font-size: 22px; font-weight: 800; color: var(--jr-green); }
+.stats-bar .label { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* ---------- 首页横幅 ---------- */
+.top-banner { margin: 14px 16px 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.top-banner img { width: 100%; }
+
+/* ---------- 页脚 ---------- */
+.footer { padding: 24px 16px 30px; text-align: center; font-size: 11px; color: #999; }
+.footer a { color: #777; margin: 0 8px; }
+.footer .copyright { margin-top: 8px; }
+
+/* ---------- 工具类 ---------- */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt8 { margin-top: 8px; } .mt16 { margin-top: 16px; } .mt24 { margin-top: 24px; }
